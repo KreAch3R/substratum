@@ -1217,4 +1217,21 @@ public class References {
             return null;
         }
     }
+
+    // These classes check if root is needed to access the specified directories
+    // TODO: merge it into one class which takes an unknown number of parameters?
+    public static boolean needsRootToAccess (Context context, String source, String destination) {
+        String dataDir = context.getDataDir().getAbsolutePath();
+        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        return (!source.startsWith(dataDir) && !source.startsWith(externalDir) &&
+                !source.startsWith("/system")) || (!destination.startsWith(dataDir) &&
+                !destination.startsWith(externalDir) && !destination.startsWith("/system"));
+    }
+
+    public static boolean needsRootToAccess (Context context, String destination) {
+        String dataDir = context.getDataDir().getAbsolutePath();
+        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        return (!destination.startsWith(dataDir) &&
+                !destination.startsWith(externalDir) && !destination.startsWith("/system"));
+    }
 }

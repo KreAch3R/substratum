@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import projekt.substratum.util.Root;
 
 import static projekt.substratum.config.References.checkMasqueradeJobService;
+import static projekt.substratum.config.References.needsRootToAccess;
 
 public class FileOperations {
 
@@ -140,12 +141,7 @@ public class FileOperations {
     }
 
     public static void createNewFolder(Context context, String destination) {
-        String dataDir = context.getDataDir().getAbsolutePath();
-        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        boolean needRoot = (!destination.startsWith(dataDir) && !destination.startsWith(externalDir) &&
-                !destination.startsWith("/system")) || (!destination.startsWith(dataDir) &&
-                !destination.startsWith(externalDir) && !destination.startsWith("/system"));
-        if (checkMasqueradeJobService(context) && needRoot) {
+        if (checkMasqueradeJobService(context) && needsRootToAccess(context, destination)) {
             MasqueradeService.createNewFolder(context, destination);
         } else {
             createNewFolder(destination);
@@ -167,12 +163,7 @@ public class FileOperations {
     }
 
     public static void copy(Context context, String source, String destination) {
-        String dataDir = context.getDataDir().getAbsolutePath();
-        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        boolean needRoot = (!source.startsWith(dataDir) && !source.startsWith(externalDir) &&
-                !source.startsWith("/system")) || (!destination.startsWith(dataDir) &&
-                !destination.startsWith(externalDir) && !destination.startsWith("/system"));
-        if (checkMasqueradeJobService(context) && needRoot) {
+        if (checkMasqueradeJobService(context) && needsRootToAccess(context, source, destination)) {
             Log.d(COPY_LOG, "Using masquerade rootless operation to copy " + source +
                     " to " + destination);
             MasqueradeService.copy(context, source, destination);
@@ -210,12 +201,7 @@ public class FileOperations {
     }
 
     public static void copyDir(Context context, String source, String destination) {
-        String dataDir = context.getDataDir().getAbsolutePath();
-        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        boolean needRoot = (!source.startsWith(dataDir) && !source.startsWith(externalDir) &&
-                !source.startsWith("/system")) || (!destination.startsWith(dataDir) &&
-                !destination.startsWith(externalDir) && !destination.startsWith("/system"));
-        if (checkMasqueradeJobService(context) && needRoot) {
+        if (checkMasqueradeJobService(context) && needsRootToAccess(context, source, destination)) {
             copy(context, source, destination);
         } else {
             copyDir(source, destination);
@@ -240,17 +226,13 @@ public class FileOperations {
         delete(context, directory, true);
     }
 
-    public static void delete(Context context, String directory, boolean deleteParent) {
-        String dataDir = context.getDataDir().getAbsolutePath();
-        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        boolean needRoot = (!directory.startsWith(dataDir) && !directory.startsWith(externalDir) &&
-                !directory.startsWith("/system"));
-        if (checkMasqueradeJobService(context) && needRoot) {
-            Log.d(DELETE_LOG, "Using masquerade rootless operation to delete " + directory);
-            MasqueradeService.delete(context, directory, deleteParent);
+    public static void delete(Context context, String destination, boolean deleteParent) {
+        if (checkMasqueradeJobService(context) && needsRootToAccess(context, destination)) {
+            Log.d(DELETE_LOG, "Using masquerade rootless operation to delete " + destination);
+            MasqueradeService.delete(context, destination, deleteParent);
 
             // Wait until delete success
-            File file = new File(directory);
+            File file = new File(destination);
             try {
                 int retryCount = 0;
                 boolean notDone = (deleteParent && file.exists()) ||
@@ -265,7 +247,7 @@ public class FileOperations {
                 Thread.interrupted();
             }
         } else {
-            delete(directory, deleteParent);
+            delete(destination, deleteParent);
         }
     }
 
@@ -301,12 +283,7 @@ public class FileOperations {
     }
 
     public static void move(Context context, String source, String destination) {
-        String dataDir = context.getDataDir().getAbsolutePath();
-        String externalDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-        boolean needRoot = (!source.startsWith(dataDir) && !source.startsWith(externalDir) &&
-                !source.startsWith("/system")) || (!destination.startsWith(dataDir) &&
-                !destination.startsWith(externalDir) && !destination.startsWith("/system"));
-        if (checkMasqueradeJobService(context) && needRoot) {
+        if (checkMasqueradeJobService(context) && needsRootToAccess(context, source, destination)) {
             Log.d(MOVE_LOG, "Using masquerade rootless operation to move " + source +
                     " to " + destination);
             MasqueradeService.move(context, source, destination);
