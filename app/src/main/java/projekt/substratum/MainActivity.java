@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -50,6 +51,7 @@ import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.DimenHolder;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
@@ -246,6 +248,60 @@ public class MainActivity extends AppCompatActivity implements
             // Suppress Fonts
         }
 
+        // Split the community chats out for easy adapting
+        ExpandableDrawerItem social = new ExpandableDrawerItem()
+                .withName(R.string.nav_drawer_community)
+                .withIcon(R.drawable.nav_drawer_community)
+                .withSelectable(false).withSubItems(
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_googleplus)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_googleplus)
+                                .withSelectable(false)
+                                .withIdentifier(100),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_telegram)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_telegram)
+                                .withSelectable(false)
+                                .withIdentifier(101),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_xda)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_xda)
+                                .withSelectable(false)
+                                .withIdentifier(102));
+
+        // Split the featured content out for easy adapting
+        ExpandableDrawerItem featured = new ExpandableDrawerItem()
+                .withName(R.string.nav_drawer_featured)
+                .withIcon(R.drawable.nav_drawer_featured)
+                .withSelectable(false).withSubItems(
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_tcf)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_tcf)
+                                .withSelectable(false)
+                                .withIdentifier(103),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_xda_portal)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_xda_portal)
+                                .withSelectable(false)
+                                .withIdentifier(104));
+
+        // Split the resources out for easy adapting
+        ExpandableDrawerItem resources = new ExpandableDrawerItem()
+                .withName(R.string.nav_drawer_resources)
+                .withIcon(R.drawable.nav_drawer_resources)
+                .withSelectable(false).withSubItems(
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_homepage)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_homepage)
+                                .withSelectable(false)
+                                .withIdentifier(105),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_template)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_template)
+                                .withSelectable(false)
+                                .withIdentifier(106),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_gerrit)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_gerrit)
+                                .withSelectable(false)
+                                .withIdentifier(107),
+                        new SecondaryDrawerItem().withName(R.string.nav_drawer_github)
+                                .withLevel(2).withIcon(R.drawable.nav_drawer_github)
+                                .withSelectable(false)
+                                .withIdentifier(108));
+
         // Begin initializing the navigation drawer
         drawerBuilder.addDrawerItems(
                 new PrimaryDrawerItem()
@@ -309,12 +365,18 @@ public class MainActivity extends AppCompatActivity implements
                         .withIdentifier(11));
         drawerBuilder.addDrawerItems(
                 new SectionDrawerItem()
-                        .withName(R.string.nav_section_header_more));
+                        .withName(R.string.nav_section_header_get_involved));
+        drawerBuilder.addDrawerItems(social);
+        drawerBuilder.addDrawerItems(featured);
+        drawerBuilder.addDrawerItems(resources);
         drawerBuilder.addDrawerItems(
-                new SecondaryDrawerItem()
+                new PrimaryDrawerItem()
                         .withName(R.string.nav_troubleshooting)
                         .withIcon(R.drawable.nav_troubleshooting)
                         .withIdentifier(12));
+        drawerBuilder.addDrawerItems(
+                new SectionDrawerItem()
+                        .withName(R.string.nav_section_header_more));
         drawerBuilder.addDrawerItems(
                 new SecondaryDrawerItem()
                         .withName(R.string.nav_team)
@@ -396,6 +458,123 @@ public class MainActivity extends AppCompatActivity implements
                     case 15:
                         switchFragment(getString(R.string.nav_settings),
                                 "SettingsFragment");
+                        break;
+                    case 100:
+                        try {
+                            String sourceURL = getString(R.string.googleplus_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 101:
+                        try {
+                            String sourceURL = getString(R.string.telegram_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 102:
+                        try {
+                            String sourceURL = getString(R.string.xda_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 103:
+                        try {
+                            String sourceURL = getString(R.string.tcf_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 104:
+                        try {
+                            String sourceURL = getString(R.string.xda_portal_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 105:
+                        try {
+                            String sourceURL = getString(R.string.homepage_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 106:
+                        try {
+                            String sourceURL = getString(R.string.template_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 107:
+                        try {
+                            String sourceURL = getString(R.string.gerrit_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
+                        break;
+                    case 108:
+                        try {
+                            String sourceURL = getString(R.string.github_link);
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(sourceURL));
+                            startActivity(i);
+                        } catch (Exception e) {
+                            Snackbar.make(findViewById(android.R.id.content),
+                                    getString(R.string.activity_missing_toast),
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        }
                         break;
                 }
             }
@@ -553,7 +732,7 @@ public class MainActivity extends AppCompatActivity implements
                 permissionCheck2 == PackageManager.PERMISSION_GRANTED) {
             //add the values which need to be saved from the drawer to the bundle
             outState = drawer.saveInstanceState(outState);
-            outState.putInt(SELECTED_DRAWER_ITEM, drawer.getCurrentSelectedPosition() - 1);
+            outState.putInt(SELECTED_DRAWER_ITEM, (int) drawer.getCurrentSelection());
             super.onSaveInstanceState(outState);
         }
     }

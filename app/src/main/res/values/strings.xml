@@ -2,14 +2,13 @@
     <string name="app_name" translatable="false">substratum</string>
     <string name="interfacer_name" translatable="false">interfacer</string>
     <string name="legacy_app_name" translatable="false">substratum legacy</string>
-    <string name="showcase">community showcase</string>
+    <string name="showcase">showcase</string>
     <string name="helper_name">substratum overlay helper</string>
     <string name="drawer_name" translatable="false">projekt substratum</string>
     <string name="restore_app_name">restore theme</string>
 
-    <string name="android">Android version:</string>
-    <string name="device">Device model:</string>
-    <string name="vendor">Security patch level:</string>
+    <string name="android">android version:</string>
+    <string name="device">device model:</string>
 
     <string name="search_play_store_url" translatable="false">https://play.google.com/store/search?q=Substratum%20Theme&amp;c=apps</string>
     <string name="search_play_store_url_icon_packs" translatable="false">https://play.google.com/store/search?q=Icon%20Pack&amp;c=apps</string>
@@ -24,14 +23,8 @@
         function!
     </string>
     <string name="showcase_no_themes">seems like there was an error caching the showcase database
-        for this tab. reload the database with the refresh button above.
+        for this tab&#8230;
     </string>
-    <string name="showcase_dialog_title">Disclaimer!</string>
-    <string name="showcase_dialog_content">Please wait while the database icons are cached in each
-        of the tabs.\n\nSubsequent launches will be much faster after the cache is complete.\n\nTo
-        reload the cache, click the refresh button above.
-    </string>
-    <string name="showcase_dialog_agree">Let\'s go!</string>
 
     <string name="on_demand_updating_title">Resource Cache Initializer</string>
     <string name="on_demand_updating_text">%s\'s cache is now rebuilding&#8230;</string>
@@ -218,7 +211,7 @@
     <string name="settings_about_substratum">substratum version</string>
     <string name="settings_about_interfacer">interfacer version</string>
     <string name="settings_about_interfacer_not_installed">interfacer not installed</string>
-    <string name="settings_about_oms_rro_version">Theme platform</string>
+    <string name="settings_about_oms_rro_version">theme platform</string>
     <string name="settings_about_oms_version_3">OMS3</string>
     <string name="settings_about_oms_version_7">OMS7</string>
     <string name="settings_about_rro_version_2">RRO2 (Legacy)</string>
@@ -377,6 +370,7 @@
     <string name="nav_wallpapers">Wallpapers</string>
 
     <string name="nav_section_header_utilities">Utilities</string>
+    <string name="nav_section_header_get_involved">Community</string>
     <string name="nav_section_header_more">More</string>
 
     <string name="nav_manage">Recovery</string>
@@ -717,6 +711,12 @@
     <string name="contributor_sajid" translatable="false">Sajid Shaik</string>
     <string name="contributor_sajid_link" translatable="false">https://lh3.googleusercontent.com/-GZWYKoQoIB0/AAAAAAAAAAI/AAAAAAAAiUg/QhGfzaMXVbI/s360-c/photo.jpg</string>
 
+    <string name="contributor_anthony" translatable="false">Anthony Nguyen (LinkedDesigns)</string>
+    <string name="contributor_anthony_link" translatable="false">https://lh3.googleusercontent.com/-RQGZNug3X_Q/AAAAAAAAAAI/AAAAAAAAH3w/Wy0y0R_VpC0/s360-c/photo.jpg</string>
+
+    <string name="contributor_kevin" translatable="false">Kevin Aguilar (221 Pixels)</string>
+    <string name="contributor_kevin_link" translatable="false">https://lh3.googleusercontent.com/-IspNqtIzYEs/AAAAAAAAAAI/AAAAAAABAAc/Eo8lGk-Jq50/s360-c/photo.jpg</string>
+
     <string name="team_nicholas" translatable="false">Nicholas Chum (nicholaschum)</string>
     <string name="team_nicholas_link" translatable="false">https://lh3.googleusercontent.com/-Xeaj_SRZKgw/AAAAAAAAAAI/AAAAAAAANFQ/7MPq-GD4A90/s360-c/photo.jpg</string>
 
@@ -863,4 +863,28 @@
     <string name="restore_fonts_button">Restore fonts</string>
 
     <string name="interfacer_not_authorized_toast">Substratum was not able to communicate with the Theme Interfacer&#8230;</string>
+
+    <string name="nav_drawer_community">Groups &amp; Communities</string>
+    <string name="nav_drawer_googleplus">Google+ Community</string>
+    <string name="googleplus_link" translatable="false">https://plus.google.com/communities/102261717366580091389</string>
+    <string name="nav_drawer_telegram">Telegram Group Chat</string>
+    <string name="telegram_link" translatable="false">https://t.me/substratum</string>
+    <string name="nav_drawer_xda">XDA Support Thread</string>
+    <string name="xda_link" translatable="false">https://forum.xda-developers.com/android/themes/projekt-substratum-t3423623</string>
+
+    <string name="nav_drawer_resources">Resources</string>
+    <string name="nav_drawer_homepage">Official Homepage</string>
+    <string name="homepage_link" translatable="false">https://substratum.github.io/home/</string>
+    <string name="nav_drawer_template">Theme Template (Themers)</string>
+    <string name="template_link" translatable="false">https://github.com/substratum/template</string>
+    <string name="nav_drawer_gerrit">Platform &amp; Exposures Gerrit</string>
+    <string name="gerrit_link" translatable="false">https://substratum.review</string>
+    <string name="nav_drawer_github">Platform GitHub Repository</string>
+    <string name="github_link" translatable="false">https://www.github.com/SubstratumResources</string>
+
+    <string name="nav_drawer_featured">Featured Content</string>
+    <string name="nav_drawer_tcf">TheCyberFibre (TCF)</string>
+    <string name="tcf_link" translatable="false">http://thecyberfibre.com/</string>
+    <string name="nav_drawer_xda_portal">XDA Portal</string>
+    <string name="xda_portal_link" translatable="false">https://xda-developers.com/author/punya-vashist</string>
 </resources>

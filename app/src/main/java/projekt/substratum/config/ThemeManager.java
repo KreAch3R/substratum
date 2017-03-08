@@ -128,6 +128,29 @@ public class ThemeManager {
         return list;
     }
 
+    public static List<String> listTargetWithMultipleOverlaysEnabled() {
+        List<String> list = new ArrayList<>();
+        Map<String, List<OverlayInfo>> allOverlays = OverlayManagerService.getAllOverlays();
+        if (allOverlays != null) {
+            Set<String> set = allOverlays.keySet();
+            for (String targetPackageName : set) {
+                List<OverlayInfo> targetOverlays = allOverlays.get(targetPackageName);
+                int targetOverlaysSize = targetOverlays.size();
+                int count = 0;
+
+                for (OverlayInfo oi : targetOverlays) {
+                    if (oi.isEnabled()) {
+                        count++;
+                    }
+                }
+                if (targetOverlaysSize > 1 && count > 1) {
+                    list.add(targetPackageName);
+                }
+            }
+        }
+        return list;
+    }
+
     public static boolean isOverlayEnabled(String overlayName) {
         List<String> enabledOverlays = ThemeManager.listOverlays(5);
         for (String o : enabledOverlays) {
@@ -170,9 +193,9 @@ public class ThemeManager {
             ThemeInterfacerService.uninstallOverlays(context, overlays, shouldRestartUI(context,
                     overlays));
         } else {
-            String command = "pm uninstall ";
+            String command = "";
             for (String packageName : overlays) {
-                command += packageName + " ";
+                command += (command.isEmpty() ? "" : " && ") + "pm uninstall " + packageName;
             }
             new ElevatedCommands.ThreadRunner().execute(command);
             if (checkOMS(context) && shouldRestartUI(context, overlays)) restartSystemUI(context);

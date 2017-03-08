@@ -280,12 +280,25 @@ public class References {
 
     public static void setAndCheckOMS(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        prefs.edit().remove("oms_state").apply();
+
         try {
-            Class.forName("android.content.om.OverlayInfo");
-            prefs.edit().putBoolean("oms_state", true).apply();
-            prefs.edit().putInt("oms_version", 7).apply();
-            Log.d(References.SUBSTRATUM_LOG, "Initializing Substratum with the seventh " +
-                    "iteration of the Overlay Manager Service...");
+            Process p = Runtime.getRuntime().exec("cmd overlay");
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(p.getInputStream()));
+            if (checkThemeInterfacer(context) ||
+                    reader.readLine().equals(
+                            "The overlay manager has already been initialized.")) {
+                prefs.edit().putBoolean("oms_state", true).apply();
+                prefs.edit().putInt("oms_version", 7).apply();
+                Log.d(References.SUBSTRATUM_LOG, "Initializing Substratum with the seventh " +
+                        "iteration of the Overlay Manager Service...");
+            } else {
+                prefs.edit().putBoolean("oms_state", false).apply();
+                prefs.edit().putInt("oms_version", 0).apply();
+                Log.d(References.SUBSTRATUM_LOG, "Initializing Substratum with the second " +
+                        "iteration of the Resource Runtime Overlay system...");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             prefs.edit().putBoolean("oms_state", false).apply();
@@ -332,16 +345,6 @@ public class References {
             e.printStackTrace();
         }
         return result;
-    }
-
-    // This method clears the app's cache
-    public static void clearAppCache(Context mContext) {
-        FileOperations.delete(mContext, mContext.getCacheDir()
-                .getAbsolutePath() + "/SubstratumBuilder/");
-        Toast toast = Toast.makeText(mContext, mContext.getString(R.string
-                        .char_success),
-                Toast.LENGTH_SHORT);
-        toast.show();
     }
 
     // Load SharedPreference defaults
@@ -1260,9 +1263,10 @@ public class References {
         if (resource_name != null) {
             try (BufferedReader br = new BufferedReader(new FileReader(overlay_file))) {
                 for (String line; (line = br.readLine()) != null; ) {
-                    if (line.contains(resource_name)) {
+                    if (line.contains("\"" + resource_name + "\"")) {
                         String[] split = line.substring(line.lastIndexOf("\">") + 2).split("<");
                         hex = split[0];
+                        if (hex.startsWith("?")) hex = "#00000000";
                     }
                 }
             } catch (IOException ioe) {

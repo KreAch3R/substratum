@@ -163,10 +163,14 @@ public class TeamFragment extends Fragment {
         ben.imgUrl = getString(R.string.contributor_ben_link);
         ben.title = getString(R.string.contributor_ben);
         contributorEntities.add(ben);
-        GalleryEntity idan = new GalleryEntity();
-        idan.imgUrl = getString(R.string.contributor_idan_link);
-        idan.title = getString(R.string.contributor_idan);
-        contributorEntities.add(idan);
+        GalleryEntity anthony = new GalleryEntity();
+        anthony.imgUrl = getString(R.string.contributor_anthony_link);
+        anthony.title = getString(R.string.contributor_anthony);
+        contributorEntities.add(anthony);
+        GalleryEntity sajid = new GalleryEntity();
+        sajid.imgUrl = getString(R.string.contributor_sajid_link);
+        sajid.title = getString(R.string.contributor_sajid);
+        contributorEntities.add(sajid);
         contributors.get(0).addGalleryData(contributorEntities);
         contributorEntities.clear();
 
@@ -174,10 +178,14 @@ public class TeamFragment extends Fragment {
         char_g.imgUrl = getString(R.string.contributor_char_link);
         char_g.title = getString(R.string.contributor_char);
         contributorEntities.add(char_g);
-        GalleryEntity sajid = new GalleryEntity();
-        sajid.imgUrl = getString(R.string.contributor_sajid_link);
-        sajid.title = getString(R.string.contributor_sajid);
-        contributorEntities.add(sajid);
+        GalleryEntity idan = new GalleryEntity();
+        idan.imgUrl = getString(R.string.contributor_idan_link);
+        idan.title = getString(R.string.contributor_idan);
+        contributorEntities.add(idan);
+        GalleryEntity travis = new GalleryEntity();
+        travis.imgUrl = getString(R.string.contributor_travis_link);
+        travis.title = getString(R.string.contributor_travis);
+        contributorEntities.add(travis);
         contributors.get(1).addGalleryData(contributorEntities);
         contributorEntities.clear();
 
@@ -185,10 +193,11 @@ public class TeamFragment extends Fragment {
         nathan.imgUrl = getString(R.string.contributor_nathan_link);
         nathan.title = getString(R.string.contributor_nathan);
         contributorEntities.add(nathan);
-        GalleryEntity travis = new GalleryEntity();
-        travis.imgUrl = getString(R.string.contributor_travis_link);
-        travis.title = getString(R.string.contributor_travis);
-        contributorEntities.add(travis);
+        GalleryEntity kevin = new GalleryEntity();
+        kevin.imgUrl = getString(R.string.contributor_kevin_link);
+        kevin.title = getString(R.string.contributor_kevin);
+        contributorEntities.add(kevin);
+        contributorEntities.add(placeholder);
         contributors.get(2).addGalleryData(contributorEntities);
         contributorEntities.clear();
 
@@ -239,63 +248,83 @@ public class TeamFragment extends Fragment {
                         switch (item) {
                             case 0:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array.chinese_translators),
+                                        getResources().getStringArray(R.array
+                                                .belarusian_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 1:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array.french_translators),
+                                        getResources().getStringArray(R.array.czech_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 2:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array.german_translators),
+                                        getResources().getStringArray(R.array.chinese_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 3:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array
-                                                .hungarian_translators),
+                                        getResources().getStringArray(R.array.french_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 4:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array.italian_translators),
+                                        getResources().getStringArray(R.array.german_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 5:
                                 builder2.setItems(
                                         getResources().getStringArray(R.array
-                                                .lithuanian_translators),
+                                                .hungarian_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 6:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array
-                                                .portuguese_brazillian_translators),
+                                        getResources().getStringArray(R.array.italian_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 7:
                                 builder2.setItems(
                                         getResources().getStringArray(R.array
-                                                .portuguese_translators),
+                                                .lithuanian_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 8:
                                 builder2.setItems(
-                                        getResources().getStringArray(R.array.russian_translators),
+                                        getResources().getStringArray(R.array
+                                                .polish_translators),
                                         (dialog2, item2) -> {
                                         });
                                 break;
                             case 9:
+                                builder2.setItems(
+                                        getResources().getStringArray(R.array
+                                                .portuguese_brazillian_translators),
+                                        (dialog2, item2) -> {
+                                        });
+                                break;
+                            case 10:
+                                builder2.setItems(
+                                        getResources().getStringArray(R.array
+                                                .portuguese_translators),
+                                        (dialog2, item2) -> {
+                                        });
+                                break;
+                            case 11:
+                                builder2.setItems(
+                                        getResources().getStringArray(R.array.russian_translators),
+                                        (dialog2, item2) -> {
+                                        });
+                                break;
+                            case 12:
                                 builder2.setItems(
                                         getResources().getStringArray(R.array.spanish_translators),
                                         (dialog2, item2) -> {
