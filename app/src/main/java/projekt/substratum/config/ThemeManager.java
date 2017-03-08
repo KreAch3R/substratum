@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import projekt.substratum.util.Root;
 
@@ -110,20 +111,24 @@ public class ThemeManager {
 
     public static List<String> listOverlays(int state) {
         List<String> list = new ArrayList<>();
-        Map<String, List<OverlayInfo>> allOverlays = OverlayManagerService.getAllOverlays();
-        if (allOverlays != null) {
-            Set<String> set = allOverlays.keySet();
-            for (String targetPackageName : set) {
-                for (OverlayInfo oi : allOverlays.get(targetPackageName)) {
-                    if (state == 5 && oi.isEnabled()) {
-                        list.add(oi.packageName);
-                    } else if (state == 4 && !oi.isEnabled()) {
-                        list.add(oi.packageName);
-                    } else if (state <= 3 && !oi.isApproved()) {
-                        list.add(oi.packageName);
+        try {
+            Map<String, List<OverlayInfo>> allOverlays = OverlayManagerService.getAllOverlays();
+            if (allOverlays != null) {
+                Set<String> set = allOverlays.keySet();
+                for (String targetPackageName : set) {
+                    for (OverlayInfo oi : allOverlays.get(targetPackageName)) {
+                        if (state == 5 && oi.isEnabled()) {
+                            list.add(oi.packageName);
+                        } else if (state == 4 && !oi.isEnabled()) {
+                            list.add(oi.packageName);
+                        } else if (state <= 3 && !oi.isApproved()) {
+                            list.add(oi.packageName);
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            // Suppress warnings: At this point, we probably ran into an OMS3/Legacy command
         }
         return list;
     }
@@ -148,6 +153,15 @@ public class ThemeManager {
                 }
             }
         }
+        return list;
+    }
+
+    public static List<String> listEnabledOverlaysForTarget(String target) {
+        List<String> list = new ArrayList<>();
+        List<String> overlays = listOverlays(5);
+        list.addAll(overlays.stream().filter(o -> o.startsWith(target))
+                .collect(Collectors.toList()));
+
         return list;
     }
 

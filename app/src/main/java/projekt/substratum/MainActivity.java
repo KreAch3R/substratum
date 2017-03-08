@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -56,6 +57,7 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 
@@ -65,6 +67,8 @@ import projekt.substratum.config.ElevatedCommands;
 import projekt.substratum.config.FileOperations;
 import projekt.substratum.config.References;
 import projekt.substratum.config.ThemeManager;
+import projekt.substratum.fragments.PriorityListFragment;
+import projekt.substratum.fragments.PriorityLoaderFragment;
 import projekt.substratum.fragments.ThemeFragment;
 import projekt.substratum.services.FloatUiTile;
 import projekt.substratum.services.InterfaceAuthorizationReceiver;
@@ -92,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements
     public static String userInput = "";
     @SuppressLint("StaticFieldLeak")
     public static SearchView searchView;
+    public static MenuItem searchItem;
     private static ActionBar supportActionBar;
     private Drawer drawer;
     private int permissionCheck, permissionCheck2;
@@ -109,9 +114,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public static void switchToStockToolbar(String title) {
-        actionbar_content.setVisibility(View.GONE);
-        actionbar_title.setVisibility(View.GONE);
-        if (supportActionBar != null) supportActionBar.setTitle(title);
+        try {
+            actionbar_content.setVisibility(View.GONE);
+            actionbar_title.setVisibility(View.GONE);
+            if (supportActionBar != null) supportActionBar.setTitle(title);
+        } catch (NullPointerException npe) {
+            // At this point, the activity is closing!
+        }
     }
 
     private void switchFragment(String title, String fragment) {
@@ -173,6 +182,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            Log.d(SUBSTRATUM_LOG, "Substratum launched with debug mode signatures.");
+            if (LeakCanary.isInAnalyzerProcess(this)) return;
+            LeakCanary.install(getApplication());
+            Log.d(SUBSTRATUM_LOG,
+                    "LeakCanary has been initialized to actively monitor memory leaks.");
+        }
         setContentView(R.layout.main_activity);
 
         int selectedDrawer = 1;
@@ -718,12 +734,20 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         try {
             getApplicationContext().unregisterReceiver(authorizationReceiver);
         } catch (IllegalArgumentException e) {
             // Already unregistered
         }
-        super.onDestroy();
+        // Set every object assignment to null to get ready for app kill
+        if (actionbar_title != null) actionbar_title = null;
+        if (actionbar_content != null) actionbar_content = null;
+        if (searchView != null) searchView = null;
+        if (searchItem != null) searchItem = null;
+        if (supportActionBar != null) supportActionBar = null;
+        if (drawer != null) drawer = null;
+        if (mProgressDialog != null) mProgressDialog = null;
     }
 
     @Override
@@ -746,7 +770,7 @@ public class MainActivity extends AppCompatActivity implements
         if (isOMS) menu.findItem(R.id.soft_reboot).setVisible(false);
         if (!isOMS) menu.findItem(R.id.per_app).setVisible(false);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         MenuItem showcase = menu.findItem(R.id.search);
         MenuItem restartUi = menu.findItem(R.id.restart_systemui);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -828,6 +852,16 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             if (drawer != null && drawer.isDrawerOpen()) {
                 drawer.closeDrawer();
+            }
+            Fragment f = getSupportFragmentManager().findFragmentById(R.id.main);
+            if (f instanceof PriorityListFragment) {
+                Fragment fragment = new PriorityLoaderFragment();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim
+                        .slide_out_right);
+                transaction.replace(R.id.main, fragment);
+                transaction.commit();
             } else if (drawer != null && drawer.getCurrentSelectedPosition() > 1) {
                 drawer.setSelectionAtPosition(1);
             } else if (drawer != null && drawer.getCurrentSelectedPosition() == 1) {

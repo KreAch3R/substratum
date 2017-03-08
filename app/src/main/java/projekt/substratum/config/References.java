@@ -364,6 +364,8 @@ public class References {
         prefs.edit().putString("compiler", "aapt").apply();
         new AOPTCheck().injectAOPT(context, true);
         prefs.edit().putBoolean("aopt_debug", false).apply();
+        prefs.edit().putBoolean("theme_debug", false).apply();
+        prefs.edit().putBoolean("force_independence", false).apply();
         prefs.edit().putBoolean("force_english", false).apply();
         prefs.edit().putBoolean("floatui_show_android_system_overlays", false).apply();
         prefs = context.getSharedPreferences("substratum_state", Context.MODE_PRIVATE);
@@ -539,6 +541,23 @@ public class References {
                     + "\"");
         }
         return context.getDrawable(R.drawable.default_overlay_icon);
+    }
+
+    // This method obtains the overlay parent icon for specified package, returns self package icon
+    // if not found
+    public static Drawable grabOverlayParentIcon(Context context, String package_name) {
+        try {
+            ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(
+                    package_name, PackageManager.GET_META_DATA);
+            if (appInfo.metaData != null) {
+                if (appInfo.metaData.getString("Substratum_Parent") != null) {
+                    return grabAppIcon(context, appInfo.metaData.getString("Substratum_Parent"));
+                }
+            }
+        } catch (Exception e) {
+            //
+        }
+        return grabAppIcon(context, package_name);
     }
 
     public static List<ResolveInfo> getIconPacks(Context context) {
@@ -1050,13 +1069,22 @@ public class References {
 
     // Begin check if device is running on the latest theme interface
     public static boolean checkThemeInterfacer(Context context) {
-        try {
-            context.getPackageManager().getPackageInfo(INTERFACER_PACKAGE, 0);
-            return true;
-        } catch (Exception e) {
-            // Suppress warning
+        boolean forceIndependence = PreferenceManager.getDefaultSharedPreferences(context)
+                .getBoolean("force_independence", false);
+        if (!forceIndependence) {
+            return getThemeInterfacerPackage(context) != null;
         }
         return false;
+    }
+
+    public static PackageInfo getThemeInterfacerPackage(Context context) {
+        try {
+            return context.getPackageManager()
+                    .getPackageInfo(INTERFACER_PACKAGE, 0);
+        } catch (Exception e) {
+            // Theme Interfacer was not installed
+        }
+        return null;
     }
 
     public static boolean isIncompatibleFirmware() {
