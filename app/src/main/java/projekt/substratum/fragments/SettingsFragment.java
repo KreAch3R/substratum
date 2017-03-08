@@ -344,44 +344,40 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         }
                         return false;
                     });
-
-            final CheckBoxPreference forceIndependence = (CheckBoxPreference)
-                    getPreferenceManager().findPreference("force_independence");
-            if (References.checkThemeInterfacer(getContext())) {
-                forceIndependence.setChecked(prefs.getBoolean("force_independence", false));
-                forceIndependence.setOnPreferenceChangeListener(
-                        (preference, newValue) -> {
-                            boolean isChecked = (Boolean) newValue;
-                            if (isChecked) {
-                                final AlertDialog.Builder builder = new AlertDialog.Builder
-                                        (getContext());
-                                builder.setTitle(R.string.break_compilation_dialog_title);
-                                builder.setMessage(R.string.break_compilation_dialog_content);
-                                builder.setNegativeButton(R.string.break_compilation_dialog_cancel,
-                                        (dialog, id) -> dialog.dismiss());
-                                builder.setPositiveButton(R.string.break_compilation_dialog_continue,
-                                        (dialog, id) -> {
-                                            prefs.edit()
-                                                    .putBoolean("force_independence", true).apply();
-                                            forceIndependence.setChecked(true);
-                                            Intent i = getContext().getPackageManager()
-                                                    .getLaunchIntentForPackage(getContext().getPackageName());
-                                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(i);
-                                        });
-                                builder.show();
-                            } else {
-                                prefs.edit().putBoolean("force_independence", false).apply();
-                                forceIndependence.setChecked(false);
-                            }
-                            return false;
-                        });
-            } else {
-                forceIndependence.setChecked(!References.checkThemeInterfacer(getContext()));
-                forceIndependence.setEnabled(References.checkThemeInterfacer(getContext()));
-            }
-            forceIndependence.setVisible(BuildConfig.DEBUG);
         }
+
+        final CheckBoxPreference forceIndependence = (CheckBoxPreference)
+                getPreferenceManager().findPreference("force_independence");
+        boolean forceIndependencePrefs = prefs.getBoolean("force_independence", false);
+        forceIndependence.setEnabled(forceIndependencePrefs ||
+                References.checkThemeInterfacer(getContext()));
+        forceIndependence.setChecked(forceIndependencePrefs ||
+                !References.checkThemeInterfacer(getContext()));
+        forceIndependence.setOnPreferenceChangeListener(
+                (preference, newValue) -> {
+                    boolean isChecked = (Boolean) newValue;
+                    if (isChecked) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder
+                                (getContext());
+                        builder.setTitle(R.string.break_compilation_dialog_title);
+                        builder.setMessage(R.string.break_compilation_dialog_content);
+                        builder.setNegativeButton(R.string.break_compilation_dialog_cancel,
+                                (dialog, id) -> dialog.dismiss());
+                        builder.setPositiveButton(R.string.break_compilation_dialog_continue,
+                                (dialog, id) -> {
+                                    prefs.edit().putBoolean("force_independence", true).apply();
+                                    forceIndependence.setChecked(true);
+                                    getActivity().recreate();
+                                });
+                        builder.show();
+                    } else {
+                        prefs.edit().putBoolean("force_independence", false).apply();
+                        forceIndependence.setChecked(false);
+                        getActivity().recreate();
+                    }
+                    return false;
+                });
+        forceIndependence.setVisible(BuildConfig.DEBUG);
 
         final Preference purgeCache = getPreferenceManager().findPreference("purge_cache");
         purgeCache.setOnPreferenceClickListener(
