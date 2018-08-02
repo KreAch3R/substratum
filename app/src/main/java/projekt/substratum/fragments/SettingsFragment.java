@@ -585,7 +585,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             prioritySwitcher.setVisible(false);
 
             // Crash Receiver should only show if the app is running in debug mode
-            if (BuildConfig.DEBUG) {
+            if (!Systems.checkSubstratumFeature(context) || !(BuildConfig.DEBUG)) {
+                crashReceiver.setVisible(false);
+            } else {
                 crashReceiver.setChecked(prefs.getBoolean("crash_receiver", true));
                 crashReceiver.setOnPreferenceChangeListener((preference, newValue) -> {
                     boolean isChecked = (Boolean) newValue;
@@ -609,9 +611,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     }
                     return false;
                 });
-                if (!Systems.checkSubstratumFeature(context)) {
-                    crashReceiver.setVisible(false);
-                }
             }
 
             // About Andromeda
