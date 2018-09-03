@@ -355,21 +355,24 @@ public class SubstratumBuilder {
                 // Delete the previous APK if it exists in the dashboard folder
                 FileOperations.delete(context, signedOverlayAPKPath);
 
-                // Sign with the built-in test key/certificate.
                 String source = workArea + '/' + overlayPackage + '.' + parse2ThemeName +
                         "-unsigned-aligned.apk";
 
-                File key = new File(context.getDataDir() + "/key");
-                char[] keyPass = "overlay".toCharArray();
+                // Sign with the built-in key/certificate.
+                File keyStoreFile = new File(context.getDataDir() + "/keystore.bks");
+                // "overlay" is both the key and keystore password.
+                char[] keyPassword = "overlay".toCharArray();
 
-                if (!key.exists()) {
+                if (!keyStoreFile.exists()) {
                     Substratum.log(SUBSTRATUM_BUILDER, "Loading keystore...");
-                    FileOperations.copyFromAsset(context, "key", key.getAbsolutePath());
+                    FileOperations.copyFromAsset(context, "keystore.bks", keyStoreFile.getAbsolutePath());
                 }
 
+                // getDefaultType() should return BKS in Android.
                 KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                keyStore.load(new FileInputStream(key), keyPass);
-                PrivateKey privateKey = (PrivateKey) keyStore.getKey("key", keyPass);
+                keyStore.load(new FileInputStream(keyStoreFile), keyPassword);
+                // "key" is the actual name of the key inside the keystore.
+                PrivateKey privateKey = (PrivateKey) keyStore.getKey("key", keyPassword);
                 List<X509Certificate> certs = new ArrayList<>();
                 certs.add((X509Certificate) keyStore.getCertificateChain("key")[0]);
 
